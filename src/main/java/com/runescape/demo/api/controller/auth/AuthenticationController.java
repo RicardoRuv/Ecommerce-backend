@@ -1,5 +1,7 @@
 package com.runescape.demo.api.controller.auth;
 
+import com.runescape.demo.api.model.LoginBody;
+import com.runescape.demo.api.model.LoginResponse;
 import com.runescape.demo.api.model.RegistrationBody;
 import com.runescape.demo.exception.UserAlreadyExistsException;
 import com.runescape.demo.service.UserService;
@@ -25,5 +27,16 @@ public class AuthenticationController {
         }catch (UserAlreadyExistsException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginBody loginBody){
+        String token = userService.login(loginBody);
+        if(token != null){
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setJwt(token);
+            return ResponseEntity.ok(loginResponse);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
