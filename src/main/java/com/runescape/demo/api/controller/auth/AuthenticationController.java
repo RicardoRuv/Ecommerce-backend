@@ -16,9 +16,19 @@ public class AuthenticationController {
 
     private UserService userService;
 
+    /**
+     * Constructor for the controller.
+     * @param userService The user service.
+     */
     public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
+
+    /**
+     * Registers a user.
+     * @param registrationBody  -- The information of the user.
+     * @return http status code.
+     */
     @PostMapping("/register")
     public ResponseEntity registerUser(@Valid @RequestBody RegistrationBody registrationBody){
         try {
@@ -29,14 +39,22 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Logs in a user.
+     * @param loginBody The information of the user.
+     * @return The JWT token.
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginBody loginBody){
+        // If the user exists and the password is correct, return the JWT token.
         String token = userService.login(loginBody);
         if(token != null){
             LoginResponse loginResponse = new LoginResponse();
             loginResponse.setJwt(token);
+            // Send the token back to the client as a json object.
             return ResponseEntity.ok(loginResponse);
         }
+        // Otherwise, return unauthorized.
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

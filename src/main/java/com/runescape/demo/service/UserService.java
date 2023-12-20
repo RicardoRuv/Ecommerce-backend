@@ -16,12 +16,24 @@ public class UserService {
     private EncryptionService encryptionService;
     private JWTService jwtService;
 
+    /**
+     * Constructor for the service. Injects the DAO and the encryption service.
+     * @param localUserDAO The local user DAO.
+     * @param encryptionService The encryption service.
+     * @param jwtService The JWT service.
+     */
     public UserService(LocalUserDAO localUserDAO, EncryptionService encryptionService, JWTService jwtService) {
         this.localUserDAO = localUserDAO;
         this.encryptionService = encryptionService;
         this.jwtService = jwtService;
     }
 
+    /**
+     * Registers a user.
+     * @param registrationBody The information of the user.
+     * @return The user.
+     * @throws UserAlreadyExistsException If the user already exists.
+     */
     public LocalUser registerUser( RegistrationBody registrationBody) throws UserAlreadyExistsException {
 
         if(localUserDAO.findByUsernameIgnoreCase(registrationBody.getUsername()).isPresent() ||
@@ -38,10 +50,17 @@ public class UserService {
         return localUserDAO.save(localUser);
 
     }
+    /**
+     * Logs in a user.
+     * @param loginBody The information of the user.
+     * @return The JWT token.
+     */
     public String login(LoginBody loginBody){
         Optional<LocalUser> localUserOptional = localUserDAO.findByUsernameIgnoreCase(loginBody.getUsername());
+        // If the user exists and the password is correct, return the JWT token.
         if(localUserOptional.isPresent()){
             LocalUser localUser = localUserOptional.get();
+            //                            plain text password,    encrypted password
             if(encryptionService.check(loginBody.getPassword(), localUser.getPassword())){
                 return jwtService.generateToken(localUser);
             }
