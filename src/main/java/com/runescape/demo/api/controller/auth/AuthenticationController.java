@@ -65,7 +65,7 @@ public class AuthenticationController {
      * @param localUser The logged in user.
      * @return The logged in user.
      *
-     * @AuthenticationPrincipal is used to access the currently authenticated user in the controllers.
+     * @AuthenticationPrincipal is used to access the currently authenticated user in the controllers.+
      */
     @GetMapping("/me")
     public ResponseEntity<LocalUser> getLoggedInUser(@AuthenticationPrincipal LocalUser localUser){

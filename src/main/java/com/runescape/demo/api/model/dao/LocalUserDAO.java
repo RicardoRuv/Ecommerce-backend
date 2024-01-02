@@ -1,11 +1,12 @@
 package com.runescape.demo.api.model.dao;
 
 import com.runescape.demo.model.LocalUser;
-import org.springframework.data.repository.CrudRepository;
+
+import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.Optional;
 
-public interface LocalUserDAO extends CrudRepository<LocalUser, Long> {
+public interface LocalUserDAO extends ListCrudRepository<LocalUser, Long> {
     boolean findByUsername(String username);
     boolean findByEmail(String email);
 
