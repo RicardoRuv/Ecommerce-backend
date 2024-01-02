@@ -4,10 +4,12 @@ import com.runescape.demo.api.model.LoginBody;
 import com.runescape.demo.api.model.LoginResponse;
 import com.runescape.demo.api.model.RegistrationBody;
 import com.runescape.demo.exception.UserAlreadyExistsException;
+import com.runescape.demo.model.LocalUser;
 import com.runescape.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -56,5 +58,17 @@ public class AuthenticationController {
         }
         // Otherwise, return unauthorized.
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    /**
+     * Gets the logged in user.
+     * @param localUser The logged in user.
+     * @return The logged in user.
+     *
+     * @AuthenticationPrincipal is used to access the currently authenticated user in the controllers.
+     */
+    @GetMapping("/me")
+    public ResponseEntity<LocalUser> getLoggedInUser(@AuthenticationPrincipal LocalUser localUser){
+        return ResponseEntity.ok(localUser);
     }
 }

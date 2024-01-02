@@ -51,5 +51,9 @@ public class JWTService {
                 .sign(algorithm); // Ensures the integrity of the JWT.
     }
 
+    public String getUsernameFromToken(String token) {
+        return JWT.decode(token).getClaim(USERNAME_KEY).asString();
+    }
+
 
 }
